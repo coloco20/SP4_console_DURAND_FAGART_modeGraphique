@@ -138,13 +138,13 @@ public class Partie {
                                         joueurCourant.obtenirDesintegrateur();
                                         jetonCourant = joueurCourant.joueJeton();
                                         plateau.supprimeresentDegrateur(ligne, col);
-                                        plateau.ajouterJetonDansColonne(jetonCourant, col);
+                                        plateau.ajouterJetonDansColonne(joueurCourant, col);
                                         System.out.println("Vous avez gagner un desintegrateur");
                                         System.out.println("Votre jeton a ete joue");
                                         break;
                                     } else {
                                         jetonCourant = joueurCourant.joueJeton();
-                                        plateau.ajouterJetonDansColonne(jetonCourant, col);
+                                        plateau.ajouterJetonDansColonne(joueurCourant, col);
                                         System.out.println("Votre jeton a ete joue");
                                         break;
                                     }

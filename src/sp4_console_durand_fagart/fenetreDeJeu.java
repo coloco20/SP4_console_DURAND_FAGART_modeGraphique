@@ -12,7 +12,7 @@ public class fenetreDeJeu extends javax.swing.JFrame {
 
     private Joueur tab[] = new Joueur[2];
     private Joueur joueurCourant;
-    PlateauDeJeu plateau=new PlateauDeJeu();
+    PlateauDeJeu plateau = new PlateauDeJeu();
 
     /**
      * Creates new form fenetreDeJeu
@@ -23,35 +23,85 @@ public class fenetreDeJeu extends javax.swing.JFrame {
         panneau_info_partie.setVisible(false);
         for (int i = 5; i >= 0; i--) {
             for (int j = 0; j < 7; j++) {
-                CelluleGraphique cellGraph = new CelluleGraphique(plateau.accesseurGrille(i,j));
+                CelluleGraphique cellGraph = new CelluleGraphique(plateau.accesseurGrille(i, j));
+
+                cellGraph.addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        jTextArea1.setText("Un bouton a ete cliquer");
+                        CelluledeGrille c = cellGraph.celluleAssociee;
+                        if (!c.presenceJeton()) {
+                            return;
+                        }
+                        if (c.lireCouleurDuJeton().equals(joueurCourant.lireCouleur())) {
+                            jTextArea1.setText("Le joueur" + joueurCourant.obtenirNom() + " récuper un jeton");
+                            joueurCourant.ajouterJeton(c.recupererJeton());
+                            joueurSuivant();
+                        } else {
+                            if (joueurCourant.nombreDesintegrateur() > 0) {
+                                jTextArea1.setText("Le joueur" + joueurCourant.obtenirNom() + " desintegrer un jeton");
+                                c.supprimerJeton();
+                                joueurCourant.utiliserDesintegrateur();
+                                joueurSuivant();
+                            } else {
+                                return;
+                            }
+                        }
+                        plateau.tasserGrille();
+                        panneau_grille.repaint();
+                        lbl_j1_desint.setText(tab[0].nombreDesintegrateur() + "");
+                        lbl_j2_desint.setText(tab[1].nombreDesintegrateur() + "");
+
+                        boolean v_j1 = plateau.etreGagnantePourCouleur(tab[0].lireCouleur());
+                        boolean v_j2 = plateau.etreGagnantePourCouleur(tab[1].lireCouleur());
+
+                        if (v_j1 & !v_j2) {
+                            jTextArea1.setText("Victoire de " + tab[0].obtenirNom());
+                        }
+                        if (v_j2 & !v_j1) {
+                            jTextArea1.setText("Victoire de " + tab[1].obtenirNom());
+                        }
+
+                        if (v_j2 & v_j1) {
+                            if (joueurCourant == tab[0]) {
+                                jTextArea1.setText("Victoire de " + tab[1].obtenirNom());
+                            } else {
+                                jTextArea1.setText("Victoire de " + tab[1].obtenirNom());
+                            }
+                        }
+
+                    }
+                });
                 panneau_grille.add(cellGraph);
-                
 
             }
         }
     }
-public void initialiserPartie() {
-        String nomJoueur1=nom_joueur1.getText();
-        Joueur J1=new Joueur (nomJoueur1);
-        String nomJoueur2=nom_joueur2.getText();
-        Joueur J2=new Joueur (nomJoueur2);
-        tab[0]=J1;
-        tab[1]=J2;
-         
+
+    public void initialiserPartie() {
+        String nomJoueur1 = nom_joueur1.getText();
+        Joueur J1 = new Joueur(nomJoueur1);
+        String nomJoueur2 = nom_joueur2.getText();
+        Joueur J2 = new Joueur(nomJoueur2);
+        tab[0] = J1;
+        tab[1] = J2;
+
         attribuerCouleurAuxJoueurs();
         lbl_j1_nom.setText(nomJoueur1);
         lbl_j2_nom.setText(nomJoueur2);
         lbl_j1_couleur.setText(J1.lireCouleur());
         lbl_j2_couleur.setText(J2.lireCouleur());
-        lbl_j1_desint.setText(J1.nombreDesintegrateur()+"");
-        lbl_j2_desint.setText(J2.nombreDesintegrateur()+"");
+        lbl_j1_desint.setText(J1.nombreDesintegrateur() + "");
+        lbl_j2_desint.setText(J2.nombreDesintegrateur() + "");
         creeEtAffecterJeton(tab[0]);
         creeEtAffecterJeton(tab[1]);
         placerTrouNoirEtDesintegrateur();
-        
-        //lbl_jcourant.setText(joueurCourant.obtenirNom());
+        int n;
+        n = (int) (Math.random() * 2);
+        joueurCourant = tab[n];
+        lbl_jcourant.setText(joueurCourant.obtenirNom());
     }
-public void attribuerCouleurAuxJoueurs() {
+
+    public void attribuerCouleurAuxJoueurs() {
 
         tab[0].affecterCouleur("r");
         tab[1].affecterCouleur("j");
@@ -90,6 +140,7 @@ public void attribuerCouleurAuxJoueurs() {
         }
 
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -239,9 +290,19 @@ public void attribuerCouleurAuxJoueurs() {
         getContentPane().add(btn_col_0, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, -1));
 
         btn_col_1.setText("2");
+        btn_col_1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_col_1ActionPerformed(evt);
+            }
+        });
         getContentPane().add(btn_col_1, new org.netbeans.lib.awtextra.AbsoluteConstraints(146, 20, -1, -1));
 
         btn_col_2.setText("3");
+        btn_col_2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_col_2ActionPerformed(evt);
+            }
+        });
         getContentPane().add(btn_col_2, new org.netbeans.lib.awtextra.AbsoluteConstraints(242, 20, -1, -1));
 
         btn_col_3.setText("4");
@@ -253,6 +314,11 @@ public void attribuerCouleurAuxJoueurs() {
         getContentPane().add(btn_col_3, new org.netbeans.lib.awtextra.AbsoluteConstraints(338, 20, -1, -1));
 
         btn_col_4.setText("5");
+        btn_col_4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_col_4ActionPerformed(evt);
+            }
+        });
         getContentPane().add(btn_col_4, new org.netbeans.lib.awtextra.AbsoluteConstraints(434, 20, -1, -1));
 
         btn_col_5.setText("6");
@@ -264,21 +330,38 @@ public void attribuerCouleurAuxJoueurs() {
         getContentPane().add(btn_col_5, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 20, -1, -1));
 
         btn_col_6.setText("7");
+        btn_col_6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_col_6ActionPerformed(evt);
+            }
+        });
         getContentPane().add(btn_col_6, new org.netbeans.lib.awtextra.AbsoluteConstraints(626, 20, -1, -1));
 
         setBounds(0, 0, 1042, 671);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_col_3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_col_3ActionPerformed
-        // TODO add your handling code here:
+        joueurSuivant();
+        jouerDansColonne(3);// TODO add your handling code here:
+        if (plateau.colonneRemplie(3)) {
+            btn_col_3.setEnabled(false);
+        }
     }//GEN-LAST:event_btn_col_3ActionPerformed
 
     private void btn_col_5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_col_5ActionPerformed
-        // TODO add your handling code here:
+        joueurSuivant();
+        jouerDansColonne(5);// TODO add your handling code here:
+        if (plateau.colonneRemplie(5)) {
+            btn_col_5.setEnabled(false);
+        }
     }//GEN-LAST:event_btn_col_5ActionPerformed
 
     private void btn_col_0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_col_0ActionPerformed
-        // TODO add your handling code here:
+        joueurSuivant();
+        jouerDansColonne(0);// TODO add your handling code here:
+        if (plateau.colonneRemplie(0)) {
+            btn_col_0.setEnabled(false);
+        }
     }//GEN-LAST:event_btn_col_0ActionPerformed
 
     private void btn_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_startActionPerformed
@@ -289,6 +372,79 @@ public void attribuerCouleurAuxJoueurs() {
         panneau_grille.repaint();
         btn_start.setEnabled(false);
     }//GEN-LAST:event_btn_startActionPerformed
+
+    private void btn_col_1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_col_1ActionPerformed
+        joueurSuivant();
+        jouerDansColonne(1);// TODO add your handling code here:
+        if (plateau.colonneRemplie(1)) {
+            btn_col_1.setEnabled(false);
+        }
+    }//GEN-LAST:event_btn_col_1ActionPerformed
+
+    private void btn_col_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_col_2ActionPerformed
+        joueurSuivant();
+        jouerDansColonne(2);// TODO add your handling code here:
+        if (plateau.colonneRemplie(2)) {
+            btn_col_2.setEnabled(false);
+        }
+    }//GEN-LAST:event_btn_col_2ActionPerformed
+
+    private void btn_col_4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_col_4ActionPerformed
+        joueurSuivant();
+        jouerDansColonne(4);// TODO add your handling code here:
+        if (plateau.colonneRemplie(4)) {
+            btn_col_4.setEnabled(false);
+        }
+    }//GEN-LAST:event_btn_col_4ActionPerformed
+
+    private void btn_col_6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_col_6ActionPerformed
+        joueurSuivant();
+        jouerDansColonne(6);
+        if (plateau.colonneRemplie(6)) {
+            btn_col_6.setEnabled(false);
+        }
+// TODO add your handling code here:
+    }//GEN-LAST:event_btn_col_6ActionPerformed
+    public boolean jouerDansColonne(int indice_colonne) {
+
+        int resulta = plateau.ajouterJetonDansColonne(joueurCourant, indice_colonne);
+        panneau_grille.repaint();
+        lbl_j1_desint.setText(tab[0].nombreDesintegrateur() + "");
+        lbl_j2_desint.setText(tab[1].nombreDesintegrateur() + "");
+
+        boolean v_j1 = plateau.etreGagnantePourCouleur(tab[0].lireCouleur());
+        boolean v_j2 = plateau.etreGagnantePourCouleur(tab[1].lireCouleur());
+
+        if (v_j1 & !v_j2) {
+            jTextArea1.setText("Victoire de " + tab[0].obtenirNom());
+        }
+        if (v_j2 & !v_j1) {
+            jTextArea1.setText("Victoire de " + tab[1].obtenirNom());
+        }
+
+        if (v_j2 & v_j1) {
+            if (joueurCourant == tab[0]) {
+                jTextArea1.setText("Victoire de " + tab[1].obtenirNom());
+            } else {
+                jTextArea1.setText("Victoire de " + tab[1].obtenirNom());
+            }
+        }
+        if (resulta == 9) {
+            return (false);
+        }
+        return (true);
+    }
+
+    public void joueurSuivant() {
+        if (joueurCourant == tab[0]) {
+            joueurCourant = tab[1];
+            lbl_jcourant.setText(joueurCourant.obtenirNom());
+        } else {
+            joueurCourant = tab[0];
+            lbl_jcourant.setText(joueurCourant.obtenirNom());
+        }
+
+    }
 
     /**
      * @param args the command line arguments

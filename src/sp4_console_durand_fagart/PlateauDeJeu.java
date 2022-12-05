@@ -21,13 +21,33 @@ public class PlateauDeJeu {
 
     }
 
-    public void ajouterJetonDansColonne(Jeton jeton_param, int indice) {
-        for (int i = 5; i > 0; i--) {
-            if (!grille[i][indice].presenceJeton()) {
-                grille[i][indice].affecterJeton(jeton_param);
+    public int ajouterJetonDansColonne(Joueur joueurCourant, int indice) {
+        int ligne = 0;
+        for (int i = 0; i < 6; i++) {
+            if (!this.presenceJeton(i, indice)) {
+                ligne = i;
                 break;
             }
         }
+        if (this.presenceTrouNoir(ligne, indice)) {
+            if (this.presenceDesintegrateur(ligne, indice)) {
+                this.supprimerTrouNoir(ligne, indice);
+                this.supprimeresentDegrateur(ligne, indice);
+                joueurCourant.obtenirDesintegrateur();
+                return (indice);
+            } else {
+                this.supprimerTrouNoir(ligne, indice);
+            }
+        }
+        if (this.presenceDesintegrateur(ligne, indice)) {
+            this.supprimeresentDegrateur(ligne, indice);
+            joueurCourant.obtenirDesintegrateur();
+            grille[ligne][indice].affecterJeton(joueurCourant.joueJeton());
+            return (indice);
+        } else {
+            grille[ligne][indice].affecterJeton(joueurCourant.joueJeton());
+            return(indice);
+        }        
     }
 
     public boolean grilleRemplie() {
@@ -112,15 +132,16 @@ public class PlateauDeJeu {
 
     public void tasserColonne(int col) {
         int nb_ligne = 0;
-        for (int i = 0; i < 8; i++) {
-            if (grille[i][col] == null) {
+        for (int i = 0; i < 6; i++) {
+            if (!grille[i][col].presenceJeton()) {
                 nb_ligne = i;
                 break;
             }
         }
-        for (int i = nb_ligne; i < 8; i++) {
-            if (grille[i][col] != null) {
-                grille[i - 1][col] = grille[i][col];
+        for (int i = nb_ligne; i < 6; i++) {
+            if (grille[i][col].presenceJeton()) {                
+                Jeton j = grille[i][col].recupererJeton();
+                grille[i - 1][col].affecterJeton(j);
             }
         }
     }
@@ -160,31 +181,47 @@ public class PlateauDeJeu {
     public String lireJeton(int x, int y) {
         return (grille[x][y].lireCouleurDuJeton());
     }
-    
-    public void afficherGrilleSurConsole(){
+
+    public void afficherGrilleSurConsole() {
         String afficher_ligne = "";
-        for(int i = 0; i < 6; i++){//i represente les ligne
+        for (int i = 0; i < 6; i++) {//i represente les ligne
             afficher_ligne = "";
-            for(int j = 0; j < 7; j++){//j represente les colonne
+            for (int j = 0; j < 7; j++) {//j represente les colonne
                 afficher_ligne += "[" + grille[i][j].toString() + "]";
             }
             System.out.println(afficher_ligne);
         }
     }
-    
-    public void afficherGrille(){
+
+    public void afficherGrille() {
         String afficher_ligne = "";
-        for(int i = 0; i < 6; i++){//i represente les ligne
+        for (int i = 0; i < 6; i++) {//i represente les ligne
             afficher_ligne = "";
-            for(int j = 0; j < 7; j++){//j represente les colonne
+            for (int j = 0; j < 7; j++) {//j represente les colonne
                 afficher_ligne += "[" + i + "," + j + "]";
             }
             System.out.println(afficher_ligne);
         }
     }
-    public CelluledeGrille accesseurGrille(int x,int y){
-        
-    return(this.grille[x][y]);
+
+    public CelluledeGrille accesseurGrille(int x, int y) {
+
+        return (this.grille[x][y]);
     }
+
+    public boolean colonneRemplie(int indice) {
+        for (int i = 0; i < 6; i++) {
+            if (!grille[i][indice].presenceJeton()) {
+                return (false);
+            }
+        }
+        return (true);
+    }
+    
+   public void tasserGrille(){
+       for(int i = 0; i < 6; i++){
+           this.tasserColonne(i);
+       }
+   }
 
 }

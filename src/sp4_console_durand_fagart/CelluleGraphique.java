@@ -35,13 +35,13 @@ public class CelluleGraphique extends JButton {
         } else {
             String couleur_jeton = celluleAssociee.lireCouleurDuJeton();
             switch (couleur_jeton) {
-                case "vide":
+                case "n":
                     setIcon(img_vide);
                     break;
-                case "Jaune":
+                case "jaune":
                     setIcon(img_jetonJaune);
                     break;
-                case "Rouge":
+                case "rouge":
                     setIcon(img_jetonRouge);
                     break;
 

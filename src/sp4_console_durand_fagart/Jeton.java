@@ -13,7 +13,12 @@ public class Jeton {//*jc*//
     private String couleur;
 
     public Jeton(String couleur_jeton) {
-        couleur = couleur_jeton;
+        if(couleur_jeton.equals("rouge")){
+            couleur = "jaune";
+        }else{
+            couleur = "rouge";
+        }
+        
 
     }
 

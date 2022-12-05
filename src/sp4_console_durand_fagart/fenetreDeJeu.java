@@ -120,6 +120,7 @@ public class fenetreDeJeu extends javax.swing.JFrame {
         int m;
         int o;
         int p;
+        plateau.viderGrille();
         for (int i = 0; i < 5; i++) {
             n = (int) (Math.random() * 6);
             m = (int) (Math.random() * 7);

@@ -37,6 +37,7 @@ public class PlateauDeJeu {
                 return (indice);
             } else {
                 this.supprimerTrouNoir(ligne, indice);
+                return(indice);
             }
         }
         if (this.presenceDesintegrateur(ligne, indice)) {
@@ -221,6 +222,16 @@ public class PlateauDeJeu {
    public void tasserGrille(){
        for(int i = 0; i < 6; i++){
            this.tasserColonne(i);
+       }
+   }
+   
+   public void viderGrille(){
+       for(int i = 0; i < 6; i++){
+           for(int j = 0; j < 7; j++){
+               grille[i][j].supprimerDesintegrateur();
+               grille[i][j].supprimerJeton();
+               grille[i][j].supprimerTrouNoir();
+           }
        }
    }
 

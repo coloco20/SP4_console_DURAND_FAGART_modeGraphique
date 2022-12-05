@@ -27,18 +27,18 @@ public class fenetreDeJeu extends javax.swing.JFrame {
 
                 cellGraph.addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        jTextArea1.setText("Un bouton a ete cliquer");
+                        jTextArea1.setText("Un bouton a ete clique");
                         CelluledeGrille c = cellGraph.celluleAssociee;
                         if (!c.presenceJeton()) {
                             return;
                         }
                         if (c.lireCouleurDuJeton().equals(joueurCourant.lireCouleur())) {
-                            jTextArea1.setText("Le joueur" + joueurCourant.obtenirNom() + " récuper un jeton");
+                            jTextArea1.setText("Le joueur" + joueurCourant.obtenirNom() + " récupere un jeton");
                             joueurCourant.ajouterJeton(c.recupererJeton());
                             joueurSuivant();
                         } else {
                             if (joueurCourant.nombreDesintegrateur() > 0) {
-                                jTextArea1.setText("Le joueur" + joueurCourant.obtenirNom() + " desintegrer un jeton");
+                                jTextArea1.setText("Le joueur" + joueurCourant.obtenirNom() + " a desintegre un jeton");
                                 c.supprimerJeton();
                                 joueurCourant.utiliserDesintegrateur();
                                 joueurSuivant();

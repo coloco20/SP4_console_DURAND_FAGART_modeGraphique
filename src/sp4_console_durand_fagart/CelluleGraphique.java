@@ -20,7 +20,7 @@ public class CelluleGraphique extends JButton {
     ImageIcon img_jetonJaune = new javax.swing.ImageIcon(getClass().getResource("/Images/jetonJaune.png"));
     ImageIcon img_jetonRouge = new javax.swing.ImageIcon(getClass().getResource("/Images/jetonRouge.png"));
     ImageIcon img_trouNoir = new javax.swing.ImageIcon(getClass().getResource("/Images/trouNoir.png"));
-
+    //importation des différentes images utilisées depuis le package Images
     public CelluleGraphique(CelluledeGrille uneCellule) {
         celluleAssociee = uneCellule;
     }
